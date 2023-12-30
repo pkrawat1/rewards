@@ -2,8 +2,9 @@ import Config
 
 # Configure your database
 config :rewards, Rewards.Repo,
-url: (System.get_env("DATABASE_URL") ||
-      raise """
+  url:
+    System.get_env("DATABASE_URL") ||
+      raise("""
       environment variable DATABASE_URL is missing.
       See that environment variables are loaded via direnv.
       copy .envrc.example .envrc

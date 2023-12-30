@@ -4,13 +4,11 @@ This API is designed to facilitate point awarding to customers based on the valu
 
 ## Table of Contents
 
-- Overview
-- Specifications
-- Setup Instructions
-- API Endpoints
-- Example Usage
-- Setup Instructions
-- Technologies Used
+- [Overview](#overview)
+- [Specifications](#specifications)
+- [Setup Instructions](#setup-instructions)
+- [API Endpoints](#api-endpoints)
+- [Example Usage](#example-usage)
 
 ## Overview
 
@@ -69,3 +67,24 @@ To get started with this API on your local machine, follow these steps:
 - #### Modify Points Award Percentage (Extra)
   - Endpoint: PATCH /settings/points
   - Description: Modifies the percentage of points awarded.
+
+## Example Usage
+
+```bash
+## Example API Request for Order Processing
+
+```bash
+curl -X POST http://localhost:4000/orders/new \
+  -H "Content-Type: application/json" \
+  -d '{
+        "order": {
+          "id": "104fd7e0-a188-4ffd-9af7-20d7876f70ab",
+          "paid": 10000,
+          "currency": "jpy"
+        },
+        "customer": {
+          "email": "example@xyz.abc",
+          "phone": null
+        }
+      }'
+```

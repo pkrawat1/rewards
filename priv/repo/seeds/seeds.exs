@@ -9,3 +9,13 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+defmodule Rewards.Seeds do
+  alias Rewards.Seeds.{Setting}
+
+  def run() do
+    Setting.seed!()
+  end
+end
+
+Rewards.Seeds.run()

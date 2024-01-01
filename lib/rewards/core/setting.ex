@@ -18,6 +18,10 @@ defmodule Rewards.Core.Setting do
     |> change(%{currency: String.upcase(attrs[:currency] || attrs["currency"] || "")})
     |> validate_required([:reward_percentage, :currency])
     |> validate_currency(:currency)
+    |> validate_number(:reward_percentage,
+      greater_than_or_equal_to: 0,
+      less_than_or_equal_to: 100
+    )
   end
 
   # Custom validation function for currency

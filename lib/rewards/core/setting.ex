@@ -15,7 +15,7 @@ defmodule Rewards.Core.Setting do
   def changeset(setting, attrs) do
     setting
     |> cast(attrs, [:reward_percentage, :currency])
-    |> change(%{currency: String.upcase(attrs[:currency] || "")})
+    |> change(%{currency: String.upcase(attrs[:currency] || attrs["currency"] || "")})
     |> validate_required([:reward_percentage, :currency])
     |> validate_currency(:currency)
   end

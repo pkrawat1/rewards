@@ -10,14 +10,9 @@ defmodule Rewards.CoreTest do
 
     @invalid_attrs %{currency: nil, reward_percentage: nil}
 
-    test "list_settings/0 returns all settings" do
+    test "get_setting!/0 returns the setting" do
       setting = setting_fixture()
-      assert Core.list_settings() == [setting]
-    end
-
-    test "get_setting!/1 returns the setting with given id" do
-      setting = setting_fixture()
-      assert Core.get_setting!(setting.id) == setting
+      assert Core.get_setting!() == setting
     end
 
     test "create_setting/1 with valid data creates a setting" do
@@ -44,13 +39,7 @@ defmodule Rewards.CoreTest do
     test "update_setting/2 with invalid data returns error changeset" do
       setting = setting_fixture()
       assert {:error, %Ecto.Changeset{}} = Core.update_setting(setting, @invalid_attrs)
-      assert setting == Core.get_setting!(setting.id)
-    end
-
-    test "delete_setting/1 deletes the setting" do
-      setting = setting_fixture()
-      assert {:ok, %Setting{}} = Core.delete_setting(setting)
-      assert_raise Ecto.NoResultsError, fn -> Core.get_setting!(setting.id) end
+      assert setting == Core.get_setting!()
     end
 
     test "change_setting/1 returns a setting changeset" do

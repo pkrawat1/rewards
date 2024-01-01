@@ -7,5 +7,8 @@ defmodule RewardsWeb.Router do
 
   scope "/api", RewardsWeb do
     pipe_through :api
+
+    get "/settings", SettingController, :show
+    patch "/settings", SettingController, :update
   end
 end

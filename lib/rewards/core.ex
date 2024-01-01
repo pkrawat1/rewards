@@ -9,33 +9,20 @@ defmodule Rewards.Core do
   alias Rewards.Core.Setting
 
   @doc """
-  Returns the list of settings.
-
-  ## Examples
-
-      iex> list_settings()
-      [%Setting{}, ...]
-
-  """
-  def list_settings do
-    Repo.all(Setting)
-  end
-
-  @doc """
-  Gets a single setting.
+  Gets the setting.
 
   Raises `Ecto.NoResultsError` if the Setting does not exist.
 
   ## Examples
 
-      iex> get_setting!(123)
+      iex> get_setting!()
       %Setting{}
 
-      iex> get_setting!(456)
+      iex> get_setting!()
       ** (Ecto.NoResultsError)
 
   """
-  def get_setting!(id), do: Repo.get!(Setting, id)
+  def get_setting!(), do: Setting |> order_by([s], desc: s.inserted_at) |> limit(1) |> Repo.one()
 
   @doc """
   Creates a setting.
@@ -71,22 +58,6 @@ defmodule Rewards.Core do
     setting
     |> Setting.changeset(attrs)
     |> Repo.update()
-  end
-
-  @doc """
-  Deletes a setting.
-
-  ## Examples
-
-      iex> delete_setting(setting)
-      {:ok, %Setting{}}
-
-      iex> delete_setting(setting)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_setting(%Setting{} = setting) do
-    Repo.delete(setting)
   end
 
   @doc """

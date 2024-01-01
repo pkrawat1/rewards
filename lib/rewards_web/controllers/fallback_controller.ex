@@ -10,17 +10,14 @@ defmodule RewardsWeb.FallbackController do
   def call(conn, {:error, :not_found}) do
     conn
     |> put_status(:not_found)
-    |> put_view(html: RewardsWeb.ErrorHTML, json: RewardsWeb.ErrorJSON)
+    |> put_view(json: RewardsWeb.ErrorJSON)
     |> render(:"404")
   end
 
-  def call(conn, {:error, %{errors: errors}}) do
+  def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
-    |> put_status(422)
-    |> json(%{error: Enum.map(errors, &format_error/1)})
-  end
-
-  defp format_error({field, message}) do
-    %{field: field, message: elem(message, 0)}
+    |> put_status(:unprocessable_entity)
+    |> put_view(json: RewardsWeb.ChangesetJSON)
+    |> render(:error, changeset: changeset)
   end
 end

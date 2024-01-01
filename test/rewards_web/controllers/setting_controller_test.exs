@@ -5,6 +5,12 @@ defmodule RewardsWeb.SettingControllerTest do
 
   @update_attrs %{currency: "JPY", reward_percentage: "20.00"}
   @invalid_attrs %{currency: nil, reward_percentage: nil}
+  @invalid_attrs_list [
+    @invalid_attrs,
+    %{@invalid_attrs | currency: "invalid", reward_percentage: "20"},
+    %{@invalid_attrs | currency: "JPY", reward_percentage: "-1"},
+    %{@invalid_attrs | currency: "JPY", reward_percentage: "101"}
+  ]
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -43,8 +49,10 @@ defmodule RewardsWeb.SettingControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = patch(conn, ~p"/api/settings", setting: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+      Enum.each(@invalid_attrs_list, fn invalid_attrs ->
+        conn = patch(conn, ~p"/api/settings", setting: invalid_attrs)
+        assert json_response(conn, 422)["errors"] != %{}
+      end)
     end
   end
 

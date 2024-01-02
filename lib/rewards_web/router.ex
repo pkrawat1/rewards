@@ -11,6 +11,6 @@ defmodule RewardsWeb.Router do
     get "/settings", SettingController, :show
     patch "/settings", SettingController, :update
 
-    resources "/customers", CustomerController, except: [:new, :edit]
+    get "/customers/:identifier/balance", CustomerController, :balance
   end
 end

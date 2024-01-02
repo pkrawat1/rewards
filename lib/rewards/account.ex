@@ -9,33 +9,20 @@ defmodule Rewards.Account do
   alias Rewards.Account.Customer
 
   @doc """
-  Returns the list of customers.
-
-  ## Examples
-
-      iex> list_customers()
-      [%Customer{}, ...]
-
-  """
-  def list_customers do
-    Repo.all(Customer)
-  end
-
-  @doc """
   Gets a single customer.
 
   Raises `Ecto.NoResultsError` if the Customer does not exist.
 
   ## Examples
 
-      iex> get_customer!(123)
+      iex> get_customer!("xyx@abc.xyz")
       %Customer{}
 
-      iex> get_customer!(456)
+      iex> get_customer!("+123214243")
       ** (Ecto.NoResultsError)
 
   """
-  def get_customer!(id), do: Repo.get!(Customer, id)
+  def get_customer!(identifier), do: Repo.get_by!(Customer, id)
 
   @doc """
   Creates a customer.
@@ -71,22 +58,6 @@ defmodule Rewards.Account do
     customer
     |> Customer.changeset(attrs)
     |> Repo.update()
-  end
-
-  @doc """
-  Deletes a customer.
-
-  ## Examples
-
-      iex> delete_customer(customer)
-      {:ok, %Customer{}}
-
-      iex> delete_customer(customer)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_customer(%Customer{} = customer) do
-    Repo.delete(customer)
   end
 
   @doc """

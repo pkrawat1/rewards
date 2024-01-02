@@ -36,14 +36,19 @@ defmodule Rewards.RewardTest do
       points_history = points_history_fixture()
       update_attrs = %{transaction_type: :spent, points: "456.7"}
 
-      assert {:ok, %PointsHistory{} = points_history} = Reward.update_points_history(points_history, update_attrs)
+      assert {:ok, %PointsHistory{} = points_history} =
+               Reward.update_points_history(points_history, update_attrs)
+
       assert points_history.transaction_type == :spent
       assert points_history.points == Decimal.new("456.7")
     end
 
     test "update_points_history/2 with invalid data returns error changeset" do
       points_history = points_history_fixture()
-      assert {:error, %Ecto.Changeset{}} = Reward.update_points_history(points_history, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Reward.update_points_history(points_history, @invalid_attrs)
+
       assert points_history == Reward.get_points_history!(points_history.id)
     end
 

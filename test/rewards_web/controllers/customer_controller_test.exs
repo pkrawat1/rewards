@@ -16,9 +16,9 @@ defmodule RewardsWeb.CustomerControllerTest do
     test "renders customer balance", %{conn: conn, customer: %Customer{id: id} = customer} do
       identifier = Account.get_customer_identifier(customer)
       points_history_fixture(%{customer_id: id, points: 200})
-      :timer.sleep(100)
+      :timer.sleep(1000)
       points_history_fixture(%{customer_id: id, points: 300})
-      :timer.sleep(100)
+      :timer.sleep(1000)
       points_history_fixture(%{customer_id: id, points: 100, transaction_type: :spent})
       conn = get(conn, ~p"/api/customers/#{identifier}/balance")
 

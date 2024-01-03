@@ -11,18 +11,23 @@ defmodule Rewards.Account do
   @doc """
   Gets a single customer.
 
-  Raises `Ecto.NoResultsError` if the Customer does not exist.
-
   ## Examples
 
-      iex> get_customer!("xyx@abc.xyz")
+      iex> get_customer_by_identifier("xyx@abc.xyz")
       %Customer{}
 
-      iex> get_customer!("+123214243")
-      ** (Ecto.NoResultsError)
+      iex> get_customer_by_identifier("+123214243")
+      nil
 
   """
-  def get_customer!(identifier), do: Repo.get_by!(Customer, id)
+  def get_customer_by_identifier(identifier),
+    do:
+      Customer
+      |> where([c], ilike(c.email, ^identifier))
+      |> or_where([c], c.phone == ^identifier)
+      |> Repo.one()
+
+  def get_customer_identifier(%{email: email, phone: phone}), do: email || phone
 
   @doc """
   Creates a customer.

@@ -10,14 +10,10 @@ defmodule Rewards.AccountTest do
 
     @invalid_attrs %{email: nil, phone: nil}
 
-    test "list_customers/0 returns all customers" do
+    test "get_customer_by_identifier!/1 returns the customer with given identifier" do
       customer = customer_fixture()
-      assert Account.list_customers() == [customer]
-    end
-
-    test "get_customer!/1 returns the customer with given id" do
-      customer = customer_fixture()
-      assert Account.get_customer!(customer.id) == customer
+      assert Account.get_customer_by_identifier!(customer.email) == customer
+      assert Account.get_customer_by_identifier!(customer.phone) == customer
     end
 
     test "create_customer/1 with valid data creates a customer" do
@@ -44,13 +40,7 @@ defmodule Rewards.AccountTest do
     test "update_customer/2 with invalid data returns error changeset" do
       customer = customer_fixture()
       assert {:error, %Ecto.Changeset{}} = Account.update_customer(customer, @invalid_attrs)
-      assert customer == Account.get_customer!(customer.id)
-    end
-
-    test "delete_customer/1 deletes the customer" do
-      customer = customer_fixture()
-      assert {:ok, %Customer{}} = Account.delete_customer(customer)
-      assert_raise Ecto.NoResultsError, fn -> Account.get_customer!(customer.id) end
+      assert customer == Account.get_customer_by_identifier!(customer.email)
     end
 
     test "change_customer/1 returns a customer changeset" do

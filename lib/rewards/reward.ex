@@ -9,33 +9,23 @@ defmodule Rewards.Reward do
   alias Rewards.Reward.PointsHistory
 
   @doc """
-  Returns the list of points_history.
-
+  Gets a customer lastest points_history.
   ## Examples
 
-      iex> list_points_history()
-      [%PointsHistory{}, ...]
-
-  """
-  def list_points_history do
-    Repo.all(PointsHistory)
-  end
-
-  @doc """
-  Gets a single points_history.
-
-  Raises `Ecto.NoResultsError` if the Points history does not exist.
-
-  ## Examples
-
-      iex> get_points_history!(123)
+      iex> get_customer_latest_points_history(123)
       %PointsHistory{}
 
-      iex> get_points_history!(456)
-      ** (Ecto.NoResultsError)
+      iex> get_customer_latest_points_history(456)
+      nil
 
   """
-  def get_points_history!(id), do: Repo.get!(PointsHistory, id)
+  def get_customer_latest_points_history(customer_id),
+    do:
+      PointsHistory
+      |> where([p], p.customer_id == ^customer_id)
+      |> order_by([c], desc: :inserted_at)
+      |> limit(1)
+      |> Repo.one()
 
   @doc """
   Creates a points_history.
@@ -53,52 +43,5 @@ defmodule Rewards.Reward do
     %PointsHistory{}
     |> PointsHistory.changeset(attrs)
     |> Repo.insert()
-  end
-
-  @doc """
-  Updates a points_history.
-
-  ## Examples
-
-      iex> update_points_history(points_history, %{field: new_value})
-      {:ok, %PointsHistory{}}
-
-      iex> update_points_history(points_history, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_points_history(%PointsHistory{} = points_history, attrs) do
-    points_history
-    |> PointsHistory.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a points_history.
-
-  ## Examples
-
-      iex> delete_points_history(points_history)
-      {:ok, %PointsHistory{}}
-
-      iex> delete_points_history(points_history)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_points_history(%PointsHistory{} = points_history) do
-    Repo.delete(points_history)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking points_history changes.
-
-  ## Examples
-
-      iex> change_points_history(points_history)
-      %Ecto.Changeset{data: %PointsHistory{}}
-
-  """
-  def change_points_history(%PointsHistory{} = points_history, attrs \\ %{}) do
-    PointsHistory.changeset(points_history, attrs)
   end
 end

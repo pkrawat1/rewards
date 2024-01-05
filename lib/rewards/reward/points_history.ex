@@ -19,6 +19,7 @@ defmodule Rewards.Reward.PointsHistory do
     points_history
     |> cast(attrs, [:transaction_type, :points, :customer_id])
     |> validate_required([:transaction_type, :points, :customer_id])
+    |> validate_number(:points, greater_than: 0)
     |> calculate_balance()
     |> validate_number(:balance, greater_than_or_equal_to: 0)
   end

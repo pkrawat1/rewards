@@ -9,7 +9,13 @@ defmodule RewardsWeb.CustomerJSON do
     %{
       data: %{
         customer: data(customer),
-        balance: data(latest_points_history)
+        balance:
+          data(latest_points_history) ||
+            %{
+              balance: nil,
+              last_transaction_points: nil,
+              last_transaction_type: nil
+            }
       }
     }
   end
@@ -22,10 +28,7 @@ defmodule RewardsWeb.CustomerJSON do
     }
   end
 
-  defp data(
-         %PointsHistory{balance: balance, transaction_type: transaction_type, points: points} =
-           points_history
-       ) do
+  defp data(%PointsHistory{balance: balance, transaction_type: transaction_type, points: points}) do
     %{
       balance: balance,
       last_transaction_points: points,

@@ -12,5 +12,6 @@ defmodule RewardsWeb.Router do
     patch "/settings", SettingController, :update
 
     get "/customers/:identifier/balance", CustomerController, :balance
+    post "/customers/:identifier/balance", CustomerController, :update_balance
   end
 end

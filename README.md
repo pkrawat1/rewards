@@ -59,13 +59,13 @@ To get started with this API on your local machine, follow these steps:
   - Endpoint: POST /orders/new
   - Description: Processes orders and awards points to customers based on order value.
 - #### Fetch Customer Balance
-  - Endpoint: GET /customers/:id/balance
+  - Endpoint: GET /customers/:identifier/balance
   - Description: Retrieves the current points balance for a specific customer.
 - #### Modify Points Balance
-  - Endpoint: PATCH /customers/:id/balance
+  - Endpoint: POST /customers/:identifier/balance
   - Description: Allows addition or subtraction of points to a customer's balance.
 - #### Modify Points Award Percentage (Extra)
-  - Endpoint: PATCH /settings/points
+  - Endpoint: PATCH /settings
   - Description: Modifies the percentage of points awarded.
 
 ## Example Usage

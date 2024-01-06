@@ -13,5 +13,7 @@ defmodule RewardsWeb.Router do
 
     get "/customers/:identifier/balance", CustomerController, :balance
     post "/customers/:identifier/balance", CustomerController, :update_balance
+
+    resources "/orders", OrderController, only: [:create, :show]
   end
 end

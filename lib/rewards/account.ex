@@ -29,6 +29,13 @@ defmodule Rewards.Account do
 
   def get_customer_identifier(%{email: email, phone: phone}), do: email || phone
 
+  def find_or_create_customer(attrs) do
+    case get_customer_by_identifier(attrs["email"] || attrs["phone"]) do
+      nil -> create_customer(attrs) 
+      customer -> {:ok, customer}
+    end
+  end
+
   @doc """
   Creates a customer.
 

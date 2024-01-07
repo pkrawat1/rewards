@@ -48,7 +48,7 @@ defmodule RewardsWeb.OrderControllerTest do
       },
       customer: %{
         email: "xyz@def.com",
-        phone: "123213231"
+        phone: "abcd"
       }
     }
   ]

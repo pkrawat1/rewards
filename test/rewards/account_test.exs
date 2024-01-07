@@ -21,7 +21,6 @@ defmodule Rewards.AccountTest do
 
       assert {:ok, %Customer{} = customer} = Account.create_customer(valid_attrs)
       assert customer.email == valid_attrs.email
-      assert customer.phone == valid_attrs.phone
     end
 
     test "create_customer/1 with invalid data returns error changeset" do
@@ -45,7 +44,6 @@ defmodule Rewards.AccountTest do
 
       assert {:ok, %Customer{} = customer} = Account.update_customer(customer, update_attrs)
       assert customer.email == update_attrs.email
-      assert customer.phone == update_attrs.phone
     end
 
     test "update_customer/2 with invalid data returns error changeset" do

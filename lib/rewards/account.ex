@@ -29,6 +29,13 @@ defmodule Rewards.Account do
 
   def get_customer_identifier(%{email: email, phone: phone}), do: email || phone
 
+  def find_or_create_customer_changeset(attrs) do
+    case get_customer_by_identifier(attrs["email"] || attrs["phone"] || "") do
+      nil -> Customer.changeset(%Customer{}, attrs)
+      customer -> change_customer(customer, attrs)
+    end
+  end
+
   @doc """
   Creates a customer.
 

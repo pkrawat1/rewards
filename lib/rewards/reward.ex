@@ -7,6 +7,7 @@ defmodule Rewards.Reward do
   alias Rewards.Repo
 
   alias Rewards.Reward.PointsHistory
+  alias Rewards.Core
 
   @doc """
   Gets a customer lastest points_history.
@@ -43,5 +44,18 @@ defmodule Rewards.Reward do
     %PointsHistory{}
     |> PointsHistory.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def calculate_points(amount, _currency) do
+    try do
+      {:ok,
+       Core.get_setting!()
+       |> Map.get(:reward_percentage)
+       |> Decimal.div(100)
+       |> Decimal.mult(amount)}
+    rescue
+      _ ->
+        {:error, :failed_points_calculation}
+    end
   end
 end

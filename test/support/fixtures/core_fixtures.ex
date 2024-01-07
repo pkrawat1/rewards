@@ -8,14 +8,18 @@ defmodule Rewards.CoreFixtures do
   Generate a setting.
   """
   def setting_fixture(attrs \\ %{}) do
-    {:ok, setting} =
+    setting = Rewards.Core.get_setting!()
+
+    unless setting do
       attrs
       |> Enum.into(%{
         currency: "JPY",
         reward_percentage: "2"
       })
       |> Rewards.Core.create_setting()
-
-    setting
+      |> elem(1)
+    else
+      setting
+    end
   end
 end

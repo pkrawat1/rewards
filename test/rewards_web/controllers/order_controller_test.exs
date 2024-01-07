@@ -10,15 +10,48 @@ defmodule RewardsWeb.OrderControllerTest do
     },
     customer: %{
       email: "xyz@abc.def",
-      phone: "123213231"
+      phone: "+12025550431"
     }
   }
-  @invalid_attrs %{
-    order: %{
-      currency: "invalid",
-      paid: "-100"
+  @invalid_attrs_list [
+    %{},
+    %{
+      order: %{
+        currency: "JPY",
+        paid: "120.5"
+      }
+    },
+    %{
+      order: %{
+        currency: "JPY",
+        paid: "120.5"
+      },
+      customer: %{
+        email: "",
+        phone: ""
+      }
+    },
+    %{
+      order: %{
+        currency: "JPY",
+        paid: "120.5"
+      },
+      customer: %{
+        email: "xyz@asd",
+        phone: "+12025550431"
+      }
+    },
+    %{
+      order: %{
+        currency: "JPY",
+        paid: "120.5"
+      },
+      customer: %{
+        email: "xyz@def.com",
+        phone: "123213231"
+      }
     }
-  }
+  ]
 
   setup %{conn: conn} do
     setting = setting_fixture(%{reward_percentage: "1"})
@@ -40,8 +73,10 @@ defmodule RewardsWeb.OrderControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, ~p"/api/orders", order: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+      Enum.each(@invalid_attrs_list, fn invalid_attrs ->
+        conn = post(conn, ~p"/api/orders", order: invalid_attrs)
+        assert json_response(conn, 422)["errors"] != %{}
+      end)
     end
   end
 end

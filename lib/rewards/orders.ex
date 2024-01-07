@@ -32,10 +32,10 @@ defmodule Rewards.Orders do
   ## Examples
 
       iex> create_order(%{field: value})
-      {:ok, %Order{}}
+      {:ok, {:ok, order: %Order{}}}
 
       iex> create_order(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+      {:error, _, %Ecto.Changeset{}, _}
 
   """
   def create_order(attrs \\ %{}) do
@@ -43,7 +43,7 @@ defmodule Rewards.Orders do
       Multi.new()
       |> Multi.insert_or_update(
         :customer,
-        Account.find_or_create_customer(attrs["customer"] || %{})
+        Account.find_or_create_customer_changeset(attrs["customer"] || %{})
       )
       |> Multi.insert(:order, fn %{customer: customer} ->
         Order.changeset(

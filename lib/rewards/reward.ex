@@ -54,7 +54,8 @@ defmodule Rewards.Reward do
        |> Decimal.div(100)
        |> Decimal.mult(amount)}
     rescue
-      _ -> {:error, :failed_points_calculation}
+      _ ->
+        {:error, :failed_points_calculation}
     end
   end
 end

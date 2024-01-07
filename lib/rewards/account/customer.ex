@@ -17,7 +17,10 @@ defmodule Rewards.Account.Customer do
   def changeset(customer, attrs) do
     customer
     |> cast(attrs, [:email, :phone])
+    |> validate_format(:email, ~r/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
     |> validate_required_contact_info()
+    |> unique_constraint(:email)
+    |> unique_constraint(:phone)
   end
 
   defp validate_required_contact_info(changeset) do

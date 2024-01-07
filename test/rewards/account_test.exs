@@ -17,24 +17,35 @@ defmodule Rewards.AccountTest do
     end
 
     test "create_customer/1 with valid data creates a customer" do
-      valid_attrs = %{email: "some email", phone: "some phone"}
+      valid_attrs = %{email: Faker.Internet.email(), phone: Faker.Phone.PtBr.phone()}
 
       assert {:ok, %Customer{} = customer} = Account.create_customer(valid_attrs)
-      assert customer.email == "some email"
-      assert customer.phone == "some phone"
+      assert customer.email == valid_attrs.email
+      assert customer.phone == valid_attrs.phone
     end
 
     test "create_customer/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Account.create_customer(@invalid_attrs)
+      customer = customer_fixture()
+
+      assert {:error, %Ecto.Changeset{}} =
+               Account.create_customer(%{
+                 email: customer.email
+               })
+
+      assert {:error, %Ecto.Changeset{}} =
+               Account.create_customer(%{
+                 phone: customer.phone
+               })
     end
 
     test "update_customer/2 with valid data updates the customer" do
       customer = customer_fixture()
-      update_attrs = %{email: "some updated email", phone: "some updated phone"}
+      update_attrs = %{email: Faker.Internet.email(), phone: Faker.Phone.PtBr.phone()}
 
       assert {:ok, %Customer{} = customer} = Account.update_customer(customer, update_attrs)
-      assert customer.email == "some updated email"
-      assert customer.phone == "some updated phone"
+      assert customer.email == update_attrs.email
+      assert customer.phone == update_attrs.phone
     end
 
     test "update_customer/2 with invalid data returns error changeset" do

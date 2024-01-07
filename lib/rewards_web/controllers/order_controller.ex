@@ -13,7 +13,7 @@ defmodule RewardsWeb.OrderController do
       |> put_resp_header("location", ~p"/api/orders/#{order}")
       |> render(:show, order: order)
     else
-      {:error, _, changeset} -> {:error, changeset}
+      {:error, _, changeset, _} -> {:error, changeset}
       e -> e
     end
   end

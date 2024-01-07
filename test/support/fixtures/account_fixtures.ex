@@ -11,8 +11,8 @@ defmodule Rewards.AccountFixtures do
     {:ok, customer} =
       attrs
       |> Enum.into(%{
-        email: "some email",
-        phone: "some phone"
+        email: Faker.Internet.email(),
+        phone: Faker.Phone.PtBr.phone()
       })
       |> Rewards.Account.create_customer()
 

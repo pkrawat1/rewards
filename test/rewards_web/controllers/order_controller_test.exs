@@ -1,6 +1,8 @@
 defmodule RewardsWeb.OrderControllerTest do
   use RewardsWeb.ConnCase
 
+  import Rewards.CoreFixtures
+
   @create_attrs %{
     order: %{
       currency: "JPY",
@@ -15,11 +17,12 @@ defmodule RewardsWeb.OrderControllerTest do
     order: %{
       currency: "invalid",
       paid: "-100"
-    },
+    }
   }
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    setting = setting_fixture(%{reward_percentage: "1"})
+    {:ok, conn: put_req_header(conn, "accept", "application/json"), setting: setting}
   end
 
   describe "create order" do

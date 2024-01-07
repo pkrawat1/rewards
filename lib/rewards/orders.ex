@@ -4,11 +4,11 @@ defmodule Rewards.Orders do
   """
 
   import Ecto.Query, warn: false
-  alias Rewards.Repo
+  alias Ecto.Multi
 
+  alias Rewards.{Account, Repo, Reward}
   alias Rewards.Orders.Order
-  alias Rewards.Account
-  alias Rewards.Account.Customer
+  alias Reward.PointsHistory
 
   @doc """
   Gets a single order.
@@ -39,10 +39,33 @@ defmodule Rewards.Orders do
 
   """
   def create_order(attrs \\ %{}) do
-    %Order{}
-    |> Order.changeset(attrs["order"])
-    |> find_or_create_customer(attrs)
-    |> Repo.insert()
+    Repo.transaction(fn ->
+      Multi.new()
+      |> Multi.insert_or_update(
+        :customer,
+        Account.find_or_create_customer(attrs["customer"] || %{})
+      )
+      |> Multi.insert(:order, fn %{customer: customer} ->
+        Order.changeset(
+          %Order{customer_id: customer.id},
+          attrs["order"]
+        )
+      end)
+      |> Multi.run(:reward_points, fn _repo, %{order: order} ->
+        Reward.calculate_points(order.paid, order.currency)
+      end)
+      |> Multi.insert(:points_history, fn %{customer: customer, reward_points: reward_points} ->
+        PointsHistory.changeset(
+          %PointsHistory{},
+          %{
+            customer_id: customer.id,
+            points: reward_points,
+            transaction_type: :earned
+          }
+        )
+      end)
+      |> Repo.transaction()
+    end)
   end
 
   @doc """
@@ -57,18 +80,4 @@ defmodule Rewards.Orders do
   def change_order(%Order{} = order, attrs \\ %{}) do
     Order.changeset(order, attrs)
   end
-
-  defp find_or_create_customer(changeset, %{"customer" => customer_attrs}) do
-    case Account.find_or_create_customer(customer_attrs) do
-      {:error, _} ->
-        changeset
-        |> Ecto.Changeset.add_error(:customer_id, "Customer not found")
-
-      {:ok, %Customer{id: customer_id}} ->
-        changeset
-        |> Ecto.Changeset.put_change(:customer_id, customer_id)
-    end
-  end
-
-  defp find_or_create_customer(changeset, _), do: changeset
 end

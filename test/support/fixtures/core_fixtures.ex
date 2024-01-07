@@ -12,7 +12,7 @@ defmodule Rewards.CoreFixtures do
       attrs
       |> Enum.into(%{
         currency: "JPY",
-        reward_percentage: "99.99"
+        reward_percentage: "2"
       })
       |> Rewards.Core.create_setting()
 

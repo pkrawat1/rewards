@@ -56,7 +56,7 @@ To get started with this API on your local machine, follow these steps:
 ## API Endpoints
 
 - #### Process Orders
-  - Endpoint: POST /orders/new
+  - Endpoint: POST /orders
   - Description: Processes orders and awards points to customers based on order value.
 - #### Fetch Customer Balance
   - Endpoint: GET /customers/:identifier/balance

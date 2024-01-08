@@ -30,7 +30,7 @@ defmodule Rewards.Orders do
   ## Examples
 
       iex> create_order(%{field: value})
-      {:ok, {:ok, order: %Order{}}}
+      {:ok, order: %Order{}}
 
       iex> create_order(%{field: bad_value})
       {:error, _, %Ecto.Changeset{}, _}

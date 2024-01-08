@@ -17,12 +17,12 @@ defmodule Rewards.Account.Customer do
   def changeset(customer, attrs) do
     customer
     |> cast(attrs, [:email, :phone])
+    |> validate_required_contact_info()
     |> validate_format(:email, ~r/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
     |> change(%{
-      phone: "+" <> String.replace(attrs[:phone] || attrs["phone"] || "", ~r/\+|\(|\)|\s|-/, "")
+      phone: String.replace(attrs[:phone] || attrs["phone"] || "", ~r/\(|\)|\s|-/, "")
     })
     |> validate_format(:phone, ~r/\A\+\d+\z/)
-    |> validate_required_contact_info()
     |> unique_constraint(:email)
     |> unique_constraint(:phone)
   end

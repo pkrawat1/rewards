@@ -20,4 +20,11 @@ defmodule RewardsWeb.FallbackController do
     |> put_view(json: RewardsWeb.ChangesetJSON)
     |> render(:error, changeset: changeset)
   end
+
+  def call(conn, {:error, :rollback}) do
+    conn
+    |> put_status(:bad_request)
+    |> put_view(json: RewardsWeb.ErrorJSON)
+    |> render(:"400")
+  end
 end

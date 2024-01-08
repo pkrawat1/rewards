@@ -1,0 +1,161 @@
+{
+  "info": {
+    "version": "1.0",
+    "title": "Rewards"
+  },
+  "host": "localhost:4000",
+  "definitions": {
+    "Error": {
+      "description": "Error responses from the API",
+      "properties": {
+        "errors": {
+          "description": "The message of the error raised",
+          "type": "object"
+        }
+      },
+      "required": [
+        "errors"
+      ],
+      "title": "Errors",
+      "type": "object"
+    },
+    "Order": {
+      "description": "Customer Order",
+      "example": {
+        "currency": "JPY",
+        "id": "104fd7e0-a188-4ffd-9af7-20d7876f70ab",
+        "paid": 1.0e3
+      },
+      "properties": {
+        "currency": {
+          "description": "The currency of the amount paid",
+          "type": "string"
+        },
+        "id": {
+          "description": "The ID of the order",
+          "type": "string"
+        },
+        "paid": {
+          "description": "The amount paid",
+          "type": "float"
+        }
+      },
+      "title": "Order",
+      "type": "object"
+    },
+    "OrderParams": {
+      "description": "Customer Order",
+      "example": {
+        "customer": {
+          "email": "xyz@example.com",
+          "phone": "+91 1234567890"
+        },
+        "order": {
+          "currency": "JPY",
+          "id": "ac22d27d-e6ab-4ca4-92b5-b3b8bed42f0c",
+          "paid": 1.0e3
+        }
+      },
+      "properties": {
+        "currency": {
+          "description": "The currency of the amount paid",
+          "type": "string"
+        },
+        "id": {
+          "description": "The ID of the order",
+          "type": "string"
+        },
+        "paid": {
+          "description": "The amount paid",
+          "type": "float"
+        }
+      },
+      "title": "Order",
+      "type": "object"
+    }
+  },
+  "schemes": [
+    "http",
+    "https",
+    "ws",
+    "wss"
+  ],
+  "paths": {
+    "/orders": {
+      "post": {
+        "description": "\n      This operation finds or creates the customer first.\n      Creates the order and assigns to the customer.\n      Then calculates the reward points and generates the points history\n    ",
+        "operationId": "create_order",
+        "parameters": [
+          {
+            "description": "Order Object",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrderParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        },
+        "summary": "Create order",
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "description": "Retrieve an order that you have recorded",
+        "operationId": "RewardsWeb.OrderController.show",
+        "parameters": [
+          {
+            "description": "The uuid of the order",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "summary": "Retrieve an order",
+        "tags": [
+          "Order"
+        ]
+      }
+    }
+  },
+  "swagger": "2.0",
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Order",
+      "description": "Order resources"
+    }
+  ]
+}

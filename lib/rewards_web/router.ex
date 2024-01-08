@@ -16,4 +16,26 @@ defmodule RewardsWeb.Router do
 
     resources "/orders", OrderController, only: [:create, :show]
   end
+
+  scope "/api/swagger" do
+    forward "/", PhoenixSwagger.Plug.SwaggerUI,
+      otp_app: :rewards,
+      swagger_file: "swagger.json"
+  end
+
+  def swagger_info do
+    %{
+      schemes: ["http", "https", "ws", "wss"],
+      basePath: "/api",
+      info: %{
+        version: "1.0",
+        title: "Rewards"
+      },
+      consumes: ["application/json"],
+      produces: ["application/json"],
+      tags: [
+        %{name: "Order", description: "Order resources"}
+      ]
+    }
+  end
 end

@@ -60,7 +60,7 @@ defmodule RewardsWeb.OrderControllerTest do
 
   describe "create order" do
     test "renders order when data is valid", %{conn: conn} do
-      conn = post(conn, ~p"/api/orders", order: @create_attrs)
+      conn = post(conn, ~p"/api/orders", @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
       conn = get(conn, ~p"/api/orders/#{id}")
@@ -74,7 +74,7 @@ defmodule RewardsWeb.OrderControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn} do
       Enum.each(@invalid_attrs_list, fn invalid_attrs ->
-        conn = post(conn, ~p"/api/orders", order: invalid_attrs)
+        conn = post(conn, ~p"/api/orders", invalid_attrs)
         assert json_response(conn, 422)["errors"] != %{}
       end)
     end

@@ -47,7 +47,9 @@ defmodule Rewards.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:ex_money, "~> 5.15"},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:faker, "~> 0.17", only: :test}
+      {:faker, "~> 0.17", only: :test},
+      {:phoenix_swagger, "~> 0.8"},
+      {:ex_json_schema, "~> 0.5"}
     ]
   end
 

@@ -1,0 +1,418 @@
+{
+  "info": {
+    "version": "1.0",
+    "title": "Rewards"
+  },
+  "host": "localhost:4000",
+  "definitions": {
+    "Setting": {
+      "example": {
+        "currency": "JPY",
+        "reward_percentage": "1"
+      },
+      "properties": {
+        "currency": {
+          "description": "Currency code",
+          "type": "string"
+        },
+        "reward_percentage": {
+          "description": "reward percent config",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Error": {
+      "description": "Error responses from the API",
+      "properties": {
+        "errors": {
+          "description": "The message of the error raised",
+          "type": "object"
+        }
+      },
+      "required": [
+        "errors"
+      ],
+      "title": "Errors",
+      "type": "object"
+    },
+    "Balance": {
+      "description": "Customer Balance",
+      "example": {
+        "balance": 100.0,
+        "last_transaction_points": 20.0,
+        "last_transaction_type": "spent"
+      },
+      "properties": {
+        "balance": {
+          "description": "Customer balance",
+          "type": "float"
+        },
+        "last_transaction_points": {
+          "description": "Last transaction amount",
+          "type": "float"
+        },
+        "last_transaction_type": {
+          "description": "Last transaction type",
+          "type": "string"
+        }
+      },
+      "title": "Balance",
+      "type": "object"
+    },
+    "Customer": {
+      "description": "Customer details",
+      "example": {
+        "email": "xyz@abc.com",
+        "phone": "+91 1234567890"
+      },
+      "properties": {
+        "email": {
+          "description": "Customer email",
+          "type": "string"
+        },
+        "phone": {
+          "description": "Customer international phone number",
+          "type": "string"
+        }
+      },
+      "title": "Customer",
+      "type": "object"
+    },
+    "Transaction": {
+      "example": {
+        "points": "10.00",
+        "transaction_type": "spent"
+      },
+      "properties": {
+        "points": {
+          "description": "Points spent/earned",
+          "type": "decimal"
+        },
+        "transaction_type": {
+          "description": "Transaction type : earned or spent",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Order": {
+      "description": "Customer Order",
+      "example": {
+        "currency": "JPY",
+        "id": "104fd7e0-a188-4ffd-9af7-20d7876f70ab",
+        "paid": 1.0e3
+      },
+      "properties": {
+        "currency": {
+          "description": "The currency of the amount paid",
+          "type": "string"
+        },
+        "id": {
+          "description": "The ID of the order",
+          "type": "string"
+        },
+        "paid": {
+          "description": "The amount paid",
+          "type": "float"
+        }
+      },
+      "title": "Order",
+      "type": "object"
+    }
+  },
+  "schemes": [
+    "http",
+    "https",
+    "ws",
+    "wss"
+  ],
+  "paths": {
+    "/customers/{identifier}/balance": {
+      "get": {
+        "description": "Shows the customer reward points balance",
+        "operationId": "customer_balance",
+        "parameters": [
+          {
+            "description": "Customer email or phone",
+            "in": "path",
+            "name": "identifier",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "balance": {
+                  "$ref": "#/definitions/Balance"
+                },
+                "customer": {
+                  "$ref": "#/definitions/Customer"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "summary": "Get customer balance",
+        "tags": [
+          "Customer"
+        ]
+      },
+      "post": {
+        "description": "Updates customer balance by creating new transaction in points history",
+        "operationId": "update_customer_balance",
+        "parameters": [
+          {
+            "description": "Customer email or phone",
+            "in": "path",
+            "name": "identifier",
+            "required": true,
+            "type": "string",
+            "value": "xyz@abc.com"
+          },
+          {
+            "description": "New transaction",
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "properties": {
+                "transaction": {
+                  "$ref": "#/definitions/Transaction"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "balance": {
+                  "$ref": "#/definitions/Balance"
+                },
+                "customer": {
+                  "$ref": "#/definitions/Customer"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "summary": "update customer balance",
+        "tags": [
+          "Customer"
+        ]
+      }
+    },
+    "/orders": {
+      "post": {
+        "description": "\n      This operation finds or creates the customer first.\n      Creates the order and assigns to the customer.\n      Then calculates the reward points and generates the points history\n    ",
+        "operationId": "create_order",
+        "parameters": [
+          {
+            "description": "Order Object",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "customer": {
+                  "$ref": "#/definitions/Customer"
+                },
+                "order": {
+                  "$ref": "#/definitions/Order"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Order"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Create order",
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/orders/{id}": {
+      "get": {
+        "description": "Retrieve an order that you have recorded",
+        "operationId": "show_order",
+        "parameters": [
+          {
+            "description": "The uuid of the order",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "string",
+            "value": "104fd7e0-a188-4ffd-9af7-20d7876f70ab"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Order"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Error"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Retrieve an order",
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/settings": {
+      "get": {
+        "description": "Shows the setting information",
+        "operationId": "show_setting",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Setting"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Error"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Get global setting",
+        "tags": [
+          "Setting"
+        ]
+      },
+      "patch": {
+        "description": "Updates the setting information",
+        "operationId": "update_setting",
+        "parameters": [
+          {
+            "description": "Setting parameters",
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "properties": {
+                "setting": {
+                  "$ref": "#/definitions/Setting"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Setting"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Error"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "update global setting",
+        "tags": [
+          "Setting"
+        ]
+      }
+    }
+  },
+  "swagger": "2.0",
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Setting",
+      "description": "Setting resources"
+    },
+    {
+      "name": "Customer",
+      "description": "Customer resources"
+    },
+    {
+      "name": "Order",
+      "description": "Order resources"
+    }
+  ]
+}

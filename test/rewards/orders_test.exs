@@ -28,17 +28,17 @@ defmodule Rewards.OrdersTest do
 
     test "get_order!/1 returns the order with given id" do
       order = order_fixture()
-      assert Orders.get_order!(order.id) == order
+      assert Orders.get_order(order.id) == order
     end
 
     test "create_order/1 with valid data creates a order" do
-      assert {:ok, {:ok, %{order: %Order{} = order}}} = Orders.create_order(@create_attrs)
+      assert {:ok, %{order: %Order{} = order}} = Orders.create_order(@create_attrs)
       assert order.currency == "JPY"
       assert order.paid == Decimal.new("120.5")
     end
 
     test "create_order/1 with invalid data returns error changeset" do
-      assert {:ok, {:error, _, %Ecto.Changeset{}, _}} = Orders.create_order(@invalid_attrs)
+      assert {:error, _, %Ecto.Changeset{}, _} = Orders.create_order(@invalid_attrs)
     end
 
     test "change_order/1 returns a order changeset" do

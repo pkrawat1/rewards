@@ -21,7 +21,10 @@ defmodule Rewards.Reward.PointsHistory do
     |> validate_required([:transaction_type, :points, :customer_id])
     |> validate_number(:points, greater_than: 0)
     |> calculate_balance()
-    |> validate_number(:balance, greater_than_or_equal_to: 0)
+    |> validate_number(:balance,
+      greater_than_or_equal_to: 0,
+      message: "Not enough balance for transaction"
+    )
   end
 
   defp calculate_balance(

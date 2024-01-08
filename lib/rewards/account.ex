@@ -24,7 +24,7 @@ defmodule Rewards.Account do
     do:
       Customer
       |> where([c], ilike(c.email, ^identifier))
-      |> or_where([c], c.phone == ^identifier)
+      |> or_where([c], c.phone == ^Rewards.Utils.sanitize_phone_number(identifier))
       |> Repo.one()
 
   def get_customer_identifier(%{email: email, phone: phone}), do: email || phone

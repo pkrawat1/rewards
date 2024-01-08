@@ -69,7 +69,7 @@ defmodule RewardsWeb.CustomerControllerTest do
            "points" => "10"
          },
          %{
-           "balance" => ["must be greater than or equal to 0"]
+           "balance" => ["Not enough balance for transaction"]
          }},
         {%{
            "transaction_type" => "invalid",
@@ -84,7 +84,7 @@ defmodule RewardsWeb.CustomerControllerTest do
          },
          %{
            "points" => ["must be greater than 0"],
-           "balance" => ["must be greater than or equal to 0"]
+           "balance" => ["Not enough balance for transaction"]
          }}
       ]
       |> Enum.each(fn {params, errors} ->

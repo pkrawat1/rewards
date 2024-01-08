@@ -13,18 +13,16 @@ defmodule Rewards.Orders do
   @doc """
   Gets a single order.
 
-  Raises `Ecto.NoResultsError` if the Order does not exist.
-
   ## Examples
 
-      iex> get_order!(123)
+      iex> get_order(123)
       %Order{}
 
-      iex> get_order!(456)
-      ** (Ecto.NoResultsError)
+      iex> get_order(456)
+      nil
 
   """
-  def get_order!(id), do: Repo.get!(Order, id)
+  def get_order(id), do: Repo.get(Order, id)
 
   @doc """
   Creates a order.
@@ -39,33 +37,31 @@ defmodule Rewards.Orders do
 
   """
   def create_order(attrs \\ %{}) do
-    Repo.transaction(fn ->
-      Multi.new()
-      |> Multi.insert_or_update(
-        :customer,
-        Account.find_or_create_customer_changeset(attrs["customer"] || %{})
+    Multi.new()
+    |> Multi.insert_or_update(
+      :customer,
+      Account.find_or_create_customer_changeset(attrs["customer"] || %{})
+    )
+    |> Multi.insert(:order, fn %{customer: customer} ->
+      Order.changeset(
+        %Order{customer_id: customer.id},
+        attrs["order"]
       )
-      |> Multi.insert(:order, fn %{customer: customer} ->
-        Order.changeset(
-          %Order{customer_id: customer.id},
-          attrs["order"]
-        )
-      end)
-      |> Multi.run(:reward_points, fn _repo, %{order: order} ->
-        Reward.calculate_points(order.paid, order.currency)
-      end)
-      |> Multi.insert(:points_history, fn %{customer: customer, reward_points: reward_points} ->
-        PointsHistory.changeset(
-          %PointsHistory{},
-          %{
-            customer_id: customer.id,
-            points: reward_points,
-            transaction_type: :earned
-          }
-        )
-      end)
-      |> Repo.transaction()
     end)
+    |> Multi.run(:reward_points, fn _repo, %{order: order} ->
+      Reward.calculate_points(order.paid, order.currency)
+    end)
+    |> Multi.insert(:points_history, fn %{customer: customer, reward_points: reward_points} ->
+      PointsHistory.changeset(
+        %PointsHistory{},
+        %{
+          customer_id: customer.id,
+          points: reward_points,
+          transaction_type: :earned
+        }
+      )
+    end)
+    |> Repo.transaction()
   end
 
   @doc """

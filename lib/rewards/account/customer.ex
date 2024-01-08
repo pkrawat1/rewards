@@ -1,6 +1,7 @@
 defmodule Rewards.Account.Customer do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Rewards.Utils
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -17,12 +18,12 @@ defmodule Rewards.Account.Customer do
   def changeset(customer, attrs) do
     customer
     |> cast(attrs, [:email, :phone])
-    |> validate_format(:email, ~r/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
-    |> change(%{
-      phone: "+" <> String.replace(attrs[:phone] || attrs["phone"] || "", ~r/\+|\(|\)|\s|-/, "")
-    })
-    |> validate_format(:phone, ~r/\A\+\d+\z/)
     |> validate_required_contact_info()
+    |> validate_format(:email, Utils.email_regexp())
+    |> change(%{
+      phone: Utils.sanitize_phone_number(attrs[:phone] || attrs["phone"])
+    })
+    |> validate_format(:phone, ~r/\A\+{0,1}\d+\z/)
     |> unique_constraint(:email)
     |> unique_constraint(:phone)
   end

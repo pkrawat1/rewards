@@ -13,7 +13,7 @@ defmodule Rewards.OrdersFixtures do
     setting_fixture(%{reward_percentage: "1"})
     customer = customer_fixture()
 
-    {:ok, {:ok, %{order: order}}} =
+    {:ok, %{order: order}} =
       attrs
       |> Enum.into(%{
         "order" => %{

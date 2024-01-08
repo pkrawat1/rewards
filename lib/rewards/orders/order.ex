@@ -15,11 +15,12 @@ defmodule Rewards.Orders.Order do
   @doc false
   def changeset(order, attrs) do
     order
-    |> cast(attrs, [:paid, :currency])
+    |> cast(attrs, [:id, :paid, :currency])
     |> change(%{currency: String.upcase(attrs[:currency] || attrs["currency"] || "")})
     |> validate_required([:paid, :currency])
     |> validate_number(:paid, greater_than: 0)
     |> validate_currency(:currency)
+    |> unique_constraint(:id, name: :orders_pkey)
   end
 
   # Custom validation function for currency

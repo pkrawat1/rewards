@@ -55,7 +55,10 @@ defmodule Rewards.Reward do
        |> Decimal.mult(amount)}
     rescue
       _ ->
-        {:error, :failed_points_calculation}
+        {:error,
+         {%{}, %{}}
+         |> Ecto.Changeset.cast(%{}, [])
+         |> Ecto.Changeset.add_error(:points, "Failed to calculate rewards")}
     end
   end
 end

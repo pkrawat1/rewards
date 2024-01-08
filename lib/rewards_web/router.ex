@@ -34,6 +34,8 @@ defmodule RewardsWeb.Router do
       consumes: ["application/json"],
       produces: ["application/json"],
       tags: [
+        %{name: "Setting", description: "Setting resources"},
+        %{name: "Customer", description: "Customer resources"},
         %{name: "Order", description: "Order resources"}
       ]
     }

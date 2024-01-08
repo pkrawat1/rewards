@@ -1,30 +1,13 @@
 defmodule RewardsWeb.OrderController do
   use RewardsWeb, :controller
+  use PhoenixSwagger
 
   alias Rewards.Orders
-
-  use PhoenixSwagger
 
   action_fallback RewardsWeb.FallbackController
 
   def swagger_definitions do
     %{
-      OrderParams:
-        swagger_schema do
-          title("Order")
-          description("Customer Order")
-
-          properties do
-            id(:string, "The ID of the order")
-            paid(:float, "The amount paid")
-            currency(:string, "The currency of the amount paid")
-          end
-
-          example(%{
-            order: %{id: "ac22d27d-e6ab-4ca4-92b5-b3b8bed42f0c", paid: 1000.00, currency: "JPY"},
-            customer: %{email: "xyz@example.com", phone: "+91 1234567890"}
-          })
-        end,
       Order:
         swagger_schema do
           title("Order")
@@ -69,10 +52,28 @@ defmodule RewardsWeb.OrderController do
     operation_id("create_order")
 
     parameters do
-      body(:body, Schema.ref(:OrderParams), "Order Object", required: true)
+      body(
+        :body,
+        swagger_schema do
+          properties do
+            order(Schema.ref(:Order))
+            customer(Schema.ref(:Customer))
+          end
+        end,
+        "Order Object",
+        required: true
+      )
     end
 
-    response(200, "OK", Schema.ref(:Order))
+    response(
+      200,
+      "OK",
+      swagger_schema do
+        properties do
+          data(Schema.ref(:Order))
+        end
+      end
+    )
   end
 
   def create(conn, params) do
@@ -93,11 +94,35 @@ defmodule RewardsWeb.OrderController do
     description("Retrieve an order that you have recorded")
 
     parameters do
-      id(:path, :string, "The uuid of the order", required: true)
+      id(:path, :string, "The uuid of the order",
+        required: true,
+        value: "104fd7e0-a188-4ffd-9af7-20d7876f70ab"
+      )
     end
 
-    response(200, "Ok", Schema.ref(:Order))
-    response(404, "Not found", Schema.ref(:Error))
+    tag("Order")
+
+    operation_id("show_order")
+
+    response(
+      200,
+      "Ok",
+      swagger_schema do
+        properties do
+          data(Schema.ref(:Order))
+        end
+      end
+    )
+
+    response(
+      404,
+      "Not found",
+      swagger_schema do
+        properties do
+          data(Schema.ref(:Error))
+        end
+      end
+    )
   end
 
   def show(conn, %{"id" => id}) do

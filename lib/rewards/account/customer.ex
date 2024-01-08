@@ -22,7 +22,7 @@ defmodule Rewards.Account.Customer do
     |> change(%{
       phone: String.replace(attrs[:phone] || attrs["phone"] || "", ~r/\(|\)|\s|-/, "")
     })
-    |> validate_format(:phone, ~r/\A\+\d+\z/)
+    |> validate_format(:phone, ~r/\A\+{0,1}\d+\z/)
     |> unique_constraint(:email)
     |> unique_constraint(:phone)
   end

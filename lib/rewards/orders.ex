@@ -13,15 +13,13 @@ defmodule Rewards.Orders do
   @doc """
   Gets a single order.
 
-  Raises `Ecto.NoResultsError` if the Order does not exist.
-
   ## Examples
 
       iex> get_order(123)
-      {:ok, %Order{}}
+      %Order{}
 
       iex> get_order(456)
-      {:error, nil}
+      nil
 
   """
   def get_order(id), do: Repo.get(Order, id)

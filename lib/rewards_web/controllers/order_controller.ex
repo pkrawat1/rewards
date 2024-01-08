@@ -102,8 +102,8 @@ defmodule RewardsWeb.OrderController do
 
   def show(conn, %{"id" => id}) do
     case Orders.get_order(id) do
-      {:ok, order} -> render(conn, :show, order: order)
-      _ -> {:error, :not_found}
+      nil -> {:error, :not_found}
+      order -> render(conn, :show, order: order)
     end
   end
 end

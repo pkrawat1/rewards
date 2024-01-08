@@ -46,6 +46,18 @@ defmodule Rewards.Reward do
     |> Repo.insert()
   end
 
+  @doc """
+  Calculates the points based on amount and reward settings.
+  INFO: Assumes currency is always JPY
+  TODO: Use currency conversion for calculation using predifined/realtime currency rates.
+
+  Predifined rates can be set like below: 
+
+  ## Examples
+      
+      iex> Money.to_currency Money.new(:USD, 1), :JPY, %{USD: Decimal.new("1.0"), JPY: Decimal.new("144.41")}
+      {:ok, Money.new(:JPY, "144.41")}
+  """
   def calculate_points(amount, _currency) do
     try do
       {:ok,

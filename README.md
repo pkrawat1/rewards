@@ -9,6 +9,7 @@ This API is designed to facilitate point awarding to customers based on the valu
 - [Setup Instructions](#setup-instructions)
 - [API Endpoints](#api-endpoints)
 - [Example Usage](#example-usage)
+- [API Docs](#api-docs)
 
 ## Overview
 
@@ -67,6 +68,9 @@ To get started with this API on your local machine, follow these steps:
 - #### Modify Points Award Percentage (Extra)
   - Endpoint: PATCH /settings
   - Description: Modifies the percentage of points awarded.
+ 
+## API Docs
+The API docs can be accessed locally on this route : `/api/swagger/index.html`
 
 ## Example Usage
 
